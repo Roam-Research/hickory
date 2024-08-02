@@ -12,7 +12,8 @@
              (first-idx 5 -1) => 5
              (first-idx 5 3) => 3"
   #?(:clj  [^long a ^long b]
-     :cljs [a b])
+     :cljs [a b]
+     :cljd [^int a ^int b])
   (if (== a -1)
     b
     (if (== b -1)
@@ -22,10 +23,12 @@
 (defn- index-of
   ([^String s c]
     #?(:clj  (.indexOf s (int c))
-       :cljs (.indexOf s c)))
+       :cljs (.indexOf s c)
+       :cljd (.indexOf s c)))
   ([^String s c idx]
     #?(:clj  (.indexOf s (int c) (int idx))
-       :cljs (.indexOf s c idx))))
+       :cljs (.indexOf s c idx)
+       :cljd (.indexOf s c idx))))
 
 (defn- split-keep-trailing-empty
   "clojure.string/split is a wrapper on java.lang.String/split with the limit

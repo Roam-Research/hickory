@@ -56,9 +56,10 @@
         :comment
         (str "<!--" (apply str (:content dom)) "-->"))
       (catch #?(:clj  IllegalArgumentException
-                :cljs js/Error) e
+                :cljs js/Error
+                :cljd ArgumentError) e
         (throw
-          (if (utils/starts-with #?(:clj (.getMessage e) :cljs (.-message e)) "No matching clause: ")
+          (if (utils/starts-with #?(:clj (.getMessage e) :cljs (.-message e) :cljd (.-message ^ArgumentError e)) "No matching clause: ")
             (ex-info (str "Not a valid node: " (pr-str dom)) {:dom dom})
             e))))))
 
@@ -139,4 +140,3 @@
   "
   [hiccup-forms]
   (apply str (map #(render-hiccup-form (hu/normalize-form %)) hiccup-forms)))
-

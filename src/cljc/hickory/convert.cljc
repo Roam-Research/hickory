@@ -52,4 +52,3 @@
                (map hickory-to-hiccup (:content dom))))
       :comment
       (str "<!--" (apply str (:content dom)) "-->"))))
-
