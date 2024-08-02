@@ -5,8 +5,6 @@
   (:require [clojure.zip :as zip]
             [clojure.string :as string]
             [hickory.zip :as hzip])
-  #?(:clj
-     (:import clojure.lang.IFn))
   (:refer-clojure :exclude [and or not class]))
 
 ;;
@@ -478,7 +476,7 @@
   ;; build the selector list into an array for quicker access. We'll do it
   ;; immediately and then closure-capture the result, so it does not get
   ;; redone every time the selector is called.
-  (let [selectors (into-array IFn selectors)]
+  (let [selectors (into-array #?(:clj clojure.lang.IFn :cljs IFn) selectors)]
     (fn [hzip-loc]
       (loop [curr-loc hzip-loc
              idx 0]
@@ -489,7 +487,7 @@
               :else
               (if-let [next-loc ((nth selectors idx) curr-loc)]
                 (recur (move-fn next-loc)
-                       (inc idx))))))))
+                  (inc idx))))))))
 
 (defn child
   "Takes any number of selectors as arguments and returns a selector that
@@ -534,8 +532,8 @@
    <div>...</div><b>...</b><span class=\"foo\">...</span>"
   [& selectors]
   (apply ordered-adjacent
-         #(right-of-node-type % :element)
-         selectors))
+    #(right-of-node-type % :element)
+    selectors))
 
 (defn ordered
   "Takes a zipper movement function and any number of selectors as arguments
@@ -553,7 +551,7 @@
   ;; 2) therefore, we need to make sure the first selector matches the loc under
   ;;    consideration, and not merely one that is farther along the movement
   ;;    direction.
-  (let [selectors (into-array IFn selectors)]
+  (let [selectors (into-array #?(:clj clojure.lang.IFn :cljs IFn) selectors)]
     (fn [hzip-loc]
       ;; First need to check that the first selector matches the current loc,
       ;; or else we can return nil immediately.
@@ -669,4 +667,3 @@
                              zip/right
                              #(nil? %))
           hzip-loc)))))
-

@@ -38,17 +38,20 @@
                     (.append sb c))
                   (recur (inc idx))))))
      ;; This shouldn't be called directly in cljs, but if it is, we use the same implementation as the html-escape function
-     :cljs (gstring/htmlEscape s)))
+     :cljs (gstring/htmlEscape s)
+     :cljd (throw "`clj-html-escape-without-quoin` should never be called")))
 
 (defn html-escape
   [s]
   #?(:clj  (clj-html-escape-without-quoin s)
-     :cljs (gstring/htmlEscape s)))
+     :cljs (gstring/htmlEscape s)
+     :cljd (throw "`clj-html-escape-without-quoin` should never be called")))
 
 (defn starts-with
   [^String s ^String prefix]
   #?(:clj  (.startsWith s prefix)
-     :cljs (goog.string.startsWith s prefix)))
+     :cljs (goog.string.startsWith s prefix)
+     :cljd (string/starts-with? s prefix)))
 
 (defn lower-case-keyword
   "Converts its string argument into a lowercase keyword."
